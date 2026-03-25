@@ -32,3 +32,10 @@ jobs:
         continue-on-error: true
         with:
           message: "Test comment from cache"
+
+      # Test an action NOT in cache - should download from internet
+      - name: Test actions/setup-go@v5 (not in cache)
+        uses: actions/setup-go@v5
+        continue-on-error: true
+        with:
+          go-version: '1.21'
