@@ -1,0 +1,34 @@
+name: Test Action Cache
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  test-cache:
+    runs-on: arc-runner-set
+    steps:
+
+      # Verify the cache env var and folder are present inside the runner
+      - name: Verify action archive cache
+        run: |
+          echo "ACTIONS_RUNNER_ACTION_ARCHIVE_CACHE=$ACTIONS_RUNNER_ACTION_ARCHIVE_CACHE"
+          echo ""
+          echo "Cache contents:"
+          ls -la $ACTIONS_RUNNER_ACTION_ARCHIVE_CACHE
+
+      # Test docker/login-action from cache
+      - name: Test docker/login-action@v3
+        uses: docker/login-action@v3
+        continue-on-error: true
+        with:
+          registry: ghcr.io
+          username: test
+          password: test
+
+      # Test mshick/add-pr-comment from cache
+      - name: Test mshick/add-pr-comment@v2
+        uses: mshick/add-pr-comment@v2
+        continue-on-error: true
+        with:
+          message: "Test comment from cache"
